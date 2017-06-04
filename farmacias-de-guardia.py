@@ -55,12 +55,13 @@ def main():
         "SERVICIO NOCTURNO (DE 23'00 A 9,30)": { "tabla": [], "setinternal": [], "pagina": "Farmacias abiertas hoy de 23:00 a 09:30 en Madrid" }, 
     }
     hoy = datetime.datetime.today().strftime("%d/%m/%Y")
-    for localidad, barrio, fecha, farmacia, direccion, duracion, telefono in farmacias:
+    for localidad, barrio, fecha, farmacia, direccion, horario, telefono in farmacias:
+        telefono = '91' + telefono
         direccionlimpia = direccion.split('(')[0].strip()
         if fecha == hoy:
             zonaenlace = zonas[barrio]
-            servicios[duracion]["tabla"].append("\n|-\n| %s || %s || 91%s " % (zonaenlace, direccion, telefono))
-            servicios[duracion]["setinternal"].append("{{#set_internal:farmaciadeguardia\n|dirección=%s\n|teléfono=%s\n|coordenadas={{#geocode:%s, Madrid}}\n|horario=%s\n}}""" % (direccion, telefono, direccionlimpia, duracion))
+            servicios[horario]["tabla"].append("\n|-\n| %s || %s || %s || %s " % (zonaenlace, direccion, horario, telefono))
+            servicios[horario]["setinternal"].append("{{#set_internal:farmaciadeguardia\n|dirección=%s\n|teléfono=%s\n|coordenadas={{#geocode:%s, Madrid}}\n|horario=%s\n}}""" % (direccion, telefono, direccionlimpia, horario))
     
     for servicio, props in servicios.items():
         output = """
@@ -72,12 +73,13 @@ def main():
 |?dirección
 |?teléfono
 |?coordenadas
+|?horario
 |format=leaflet
 }}
 {| class="wikitable sortable"
 |+ %s (%s)
 |-
-! Zona !! Dirección !! Teléfono""" % (servicio, props["pagina"], hoy)
+! Zona !! Dirección !! Horario !! Teléfono""" % (servicio, props["pagina"], hoy)
         output += ''.join(props["tabla"])
         output += """
 |}

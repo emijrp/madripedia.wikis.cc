@@ -1,2 +1,3 @@
 # madripedia.wikis.cc
-Scripts para Madripedia
+
+Scripts para Madripedia.
